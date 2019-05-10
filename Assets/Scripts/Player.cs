@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     private SpriteRenderer sprite;
     private Animator animator;
     private float prevYLoc;
+    private float prevXLoc;
 
     void Start()
     {
@@ -21,6 +22,7 @@ public class Player : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
 
+        prevXLoc = body.position.x;
         prevYLoc = body.position.y;
 
     }
@@ -33,29 +35,7 @@ public class Player : MonoBehaviour
     {
         moveX = Input.GetAxis("Horizontal");
 
-        // Controls
-        if (isGrounded)
-        {
-
-        }
-        if (Input.GetButtonUp("Jump"))
-        {
-            Jump();
-        }
-
-        // Animation
-        if (moveX != 0)
-        {
-            animator.SetBool("isRunning", true);
-        }
-        else
-        {
-            animator.SetBool("isRunning", false);
-        }
-
-        Debug.Log(body.position.y);
-
-        // Direction
+        // Face player to the right direction
         if (moveX < 0.0f)
         {
             sprite.flipX = true;
@@ -65,8 +45,31 @@ public class Player : MonoBehaviour
             sprite.flipX = false;
         }
 
-        // Physics
+        // Move player on X axis
         body.velocity = new Vector2(moveX * playerSpeed, body.velocity.y);
+
+        // Set animation based on movement
+        if (isGrounded)
+        {
+            if (moveX == 0.0f)
+            {
+                animator.SetInteger("animation", 0);
+            }
+            else
+            {
+                animator.SetInteger("animation", 1);
+            }
+        }
+        else
+        {
+            animator.SetInteger("animation", 2);
+        }
+
+        // Jump
+        if (Input.GetButtonDown("Jump"))
+        {
+            Jump();
+        }
     }
 
     void Jump()
@@ -83,20 +86,7 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag == "Floor")
         {
             isGrounded = true;
+            animator.SetTrigger("touchGround");
         }
-    }
-
-    // =======
-    // Helpers
-    // =======
-
-    bool IsMovingUp()
-    {
-        return body.position.y > prevYLoc;
-    }
-
-    bool IsMovingDown()
-    {
-        return body.position.y < prevYLoc;
     }
 }
