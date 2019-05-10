@@ -7,6 +7,7 @@ public class BaldPirate : MonoBehaviour
     Rigidbody2D body;
     Animator animator;
     GameObject target;
+    SpriteRenderer sprite;
 
     bool isRunning;
 
@@ -14,11 +15,10 @@ public class BaldPirate : MonoBehaviour
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
+        sprite = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
 
         target = GameObject.FindWithTag("Player");
-
-        StartCoroutine(TestAnim());
     }
 
     // Update is called once per frame
@@ -29,16 +29,12 @@ public class BaldPirate : MonoBehaviour
 
         if (pos.x > targetPos.x) {
             body.velocity = new Vector2(-1, body.velocity.y);
+            sprite.flipX = true;
         } else {
             body.velocity = new Vector2(1, body.velocity.y);
+            sprite.flipX = false;
         }
 
-        animator.SetBool("Running", isRunning);
-    }
-
-    IEnumerator TestAnim()
-    {
-        yield return new WaitForSeconds(2);
-        isRunning = true;
+        animator.SetBool("Running", true);
     }
 }
