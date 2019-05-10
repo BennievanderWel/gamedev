@@ -19,17 +19,17 @@ public class Player : MonoBehaviour
     {
         // Controls
         moveX = Input.GetAxis("Horizontal");
-        Debug.Log(moveX);
+
         // Animation
         // Direction
-        // if (moveX < 0.0f && facingRight == false)
-        // {
-        //     FlipPlayer();
-        // }
-        // else if (moveX > 0.0f && facingRight == true)
-        // {
-        //     FlipPlayer();
-        // }
+        if (moveX < 0.0f && facingRight == false)
+        {
+            FlipPlayer();
+        }
+        else if (moveX > 0.0f && facingRight == true)
+        {
+            FlipPlayer();
+        }
 
         // Physics
         gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(moveX * playerSpeed, gameObject.GetComponent<Rigidbody2D>().velocity.y);
@@ -42,6 +42,9 @@ public class Player : MonoBehaviour
 
     void FlipPlayer()
     {
-
+        facingRight = !facingRight;
+        Vector2 localScale = gameObject.transform.localScale;
+        localScale.x *= -1;
+        transform.localScale = localScale;
     }
 }
