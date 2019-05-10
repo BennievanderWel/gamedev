@@ -6,15 +6,23 @@ public class Player : MonoBehaviour
 {
 
     public int playerSpeed = 10;
-    private bool facingRight = false;
     public int playerJumpPower = 1250;
     private float moveX;
+    private float moveY;
     private bool isGrounded = true;
     private Rigidbody2D body;
+    private SpriteRenderer sprite;
+    private Animator animator;
+    private float prevYLoc;
 
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
+        sprite = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
+
+        prevYLoc = body.position.y;
+
     }
     void Update()
     {
@@ -23,21 +31,38 @@ public class Player : MonoBehaviour
 
     void PlayerMove()
     {
-        // Controls
         moveX = Input.GetAxis("Horizontal");
-        if (Input.GetButtonDown("Jump"))
+
+        // Controls
+        if (isGrounded)
+        {
+
+        }
+        if (Input.GetButtonUp("Jump"))
         {
             Jump();
         }
 
-        // Direction
-        if (moveX < 0.0f && !facingRight)
+        // Animation
+        if (moveX != 0)
         {
-            FlipPlayer();
+            animator.SetBool("isRunning", true);
         }
-        else if (moveX > 0.0f && facingRight)
+        else
         {
-            FlipPlayer();
+            animator.SetBool("isRunning", false);
+        }
+
+        Debug.Log(body.position.y);
+
+        // Direction
+        if (moveX < 0.0f)
+        {
+            sprite.flipX = true;
+        }
+        else if (moveX > 0.0f)
+        {
+            sprite.flipX = false;
         }
 
         // Physics
@@ -53,19 +78,25 @@ public class Player : MonoBehaviour
         }
     }
 
-    void FlipPlayer()
-    {
-        facingRight = !facingRight;
-        Vector2 localScale = gameObject.transform.localScale;
-        localScale.x *= -1;
-        transform.localScale = localScale;
-    }
-
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Floor")
         {
             isGrounded = true;
         }
+    }
+
+    // =======
+    // Helpers
+    // =======
+
+    bool IsMovingUp()
+    {
+        return body.position.y > prevYLoc;
+    }
+
+    bool IsMovingDown()
+    {
+        return body.position.y < prevYLoc;
     }
 }
