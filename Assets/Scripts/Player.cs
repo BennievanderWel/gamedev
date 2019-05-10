@@ -10,7 +10,12 @@ public class Player : MonoBehaviour
     public int playerJumpPower = 1250;
     private float moveX;
     private bool isGrounded = true;
+    private Rigidbody2D body;
 
+    void Start()
+    {
+        body = GetComponent<Rigidbody2D>();
+    }
     void Update()
     {
         PlayerMove();
@@ -36,14 +41,14 @@ public class Player : MonoBehaviour
         }
 
         // Physics
-        gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(moveX * playerSpeed, gameObject.GetComponent<Rigidbody2D>().velocity.y);
+        body.velocity = new Vector2(moveX * playerSpeed, body.velocity.y);
     }
 
     void Jump()
     {
         if (isGrounded)
         {
-            GetComponent<Rigidbody2D>().AddForce(Vector2.up * playerJumpPower);
+            body.AddForce(Vector2.up * playerJumpPower);
             isGrounded = false;
         }
     }
@@ -58,7 +63,7 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.name == "Floor")
+        if (collision.gameObject.tag == "Floor")
         {
             isGrounded = true;
         }
