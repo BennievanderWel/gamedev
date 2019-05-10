@@ -8,6 +8,7 @@ public class BaldPirate : MonoBehaviour
     Animator animator;
     GameObject target;
     SpriteRenderer sprite;
+    float cooldownCounter = -1;
 
     bool isRunning;
 
@@ -27,12 +28,28 @@ public class BaldPirate : MonoBehaviour
         var pos = transform.position;
         var targetPos = target.transform.position;
 
+
+
         if (pos.x > targetPos.x) {
             body.velocity = new Vector2(-1, body.velocity.y);
             sprite.flipX = true;
         } else {
             body.velocity = new Vector2(1, body.velocity.y);
             sprite.flipX = false;
+        }
+
+        if (cooldownCounter > 0) {
+            cooldownCounter -= Time.deltaTime;
+        }
+
+        if (Vector3.Distance(pos, targetPos) < 1.6 && cooldownCounter <= 0) {
+            animator.SetTrigger("Attack");
+
+            var body = target.GetComponent<Rigidbody2D>();
+
+            body.AddForce(new Vector2(0, 1000));
+            
+            cooldownCounter = 1;
         }
 
         animator.SetBool("Running", true);
