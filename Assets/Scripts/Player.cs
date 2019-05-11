@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -12,13 +13,21 @@ public class Player : MonoBehaviour
     private Rigidbody2D body;
     private SpriteRenderer sprite;
     private Animator animator;
+    public PlayerButton leftButton;
+    public PlayerButton rightButton;
+    public Button jumpButton;
+
+    bool buttonLeft;
 
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+
+        jumpButton.onClick.AddListener(Jump);
     }
+
     void Update()
     {
         PlayerMove();
@@ -28,20 +37,13 @@ public class Player : MonoBehaviour
     {
         moveX = Input.GetAxis("Horizontal");
 
-        // Basic touch movement
-        if (Input.touchCount > 0)
+        if (leftButton.IsPressed)
         {
-            var input = Input.GetTouch(0);
-            var relX = input.position.x / Screen.width;
-
-            if (relX > 0.5)
-            {
-                moveX = 1;
-            }
-            else
-            {
-                moveX = -1;
-            }
+            moveX = -1;
+        }
+        else if (rightButton.IsPressed)
+        {
+            moveX = 1;
         }
 
         // Face player to the right direction
@@ -64,15 +66,18 @@ public class Player : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             Jump();
-            animator.SetBool("isJumping", true);
         }
     }
 
     void Jump()
     {
+
         // Only jump when player is on the ground
         if (isGrounded)
         {
+
+            animator.SetBool("isJumping", true);
+
             body.AddForce(Vector2.up * playerJumpPower);
             isGrounded = false;
         }
