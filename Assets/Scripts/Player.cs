@@ -8,13 +8,14 @@ public class Player : MonoBehaviour
     public int playerhealth = 1;
     public int playerSpeed = 10;
     public int playerJumpPower = 1250;
+    public Canvas deathScreenCanvas;
     private float moveX;
     private bool isGrounded = true;
     private Rigidbody2D body;
     private SpriteRenderer sprite;
     private Animator animator;
     private PlayerStats playerStats;
-
+    
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
@@ -97,7 +98,7 @@ public class Player : MonoBehaviour
         if(playerStats.health <= 0)
         {
             // start death animation
-            // load GameOver Screen
+            deathScreenCanvas.enabled = true;
             Debug.Log("dead");
           
         }
