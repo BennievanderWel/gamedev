@@ -7,18 +7,23 @@ public class Bomb : MonoBehaviour
 
     private Animator animator;
     private SpriteRenderer sprite;
+    private CircleCollider2D collider;
+    private Rigidbody2D body;
 
     void Start()
     {
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
+        body = GetComponent<Rigidbody2D>();
+        collider = GetComponent<CircleCollider2D>();
     }
 
     void Explode()
     {
         Quaternion rotation = Quaternion.AngleAxis(0, Vector3.forward);
         transform.rotation = rotation;
-        Destroy(GetComponent<Rigidbody2D>());
+        Destroy(body);
+        Destroy(collider);
         animator.SetTrigger("explode");
     }
 
@@ -26,6 +31,4 @@ public class Bomb : MonoBehaviour
     {
         Destroy(gameObject);
     }
-    // 0.50968998670578
-    // 0.324863582849503
 }
