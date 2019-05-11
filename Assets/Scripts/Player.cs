@@ -8,23 +8,16 @@ public class Player : MonoBehaviour
     public int playerSpeed = 10;
     public int playerJumpPower = 1250;
     private float moveX;
-    private float moveY;
     private bool isGrounded = true;
     private Rigidbody2D body;
     private SpriteRenderer sprite;
     private Animator animator;
-    private float prevYLoc;
-    private float prevXLoc;
 
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-
-        prevXLoc = body.position.x;
-        prevYLoc = body.position.y;
-
     }
     void Update()
     {
@@ -36,11 +29,11 @@ public class Player : MonoBehaviour
         moveX = Input.GetAxis("Horizontal");
 
         // Face player to the right direction
-        if (moveX < 0.0f)
+        if (moveX < 0.0)
         {
             sprite.flipX = true;
         }
-        else if (moveX > 0.0f)
+        else if (moveX > 0.0)
         {
             sprite.flipX = false;
         }
@@ -49,31 +42,19 @@ public class Player : MonoBehaviour
         body.velocity = new Vector2(moveX * playerSpeed, body.velocity.y);
 
         // Set animation based on movement
-        if (isGrounded)
-        {
-            if (moveX == 0.0f)
-            {
-                animator.SetInteger("animation", 0);
-            }
-            else
-            {
-                animator.SetInteger("animation", 1);
-            }
-        }
-        else
-        {
-            animator.SetInteger("animation", 2);
-        }
+        animator.SetFloat("moveX", Mathf.Abs(moveX));
 
         // Jump
         if (Input.GetButtonDown("Jump"))
         {
             Jump();
+            animator.SetBool("isJumping", true);
         }
     }
 
     void Jump()
     {
+        // Only jump when player is on the ground
         if (isGrounded)
         {
             body.AddForce(Vector2.up * playerJumpPower);
@@ -83,10 +64,11 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        // Modify state and animation when touching the floor
         if (collision.gameObject.tag == "Floor")
         {
             isGrounded = true;
-            animator.SetTrigger("touchGround");
+            animator.SetBool("isJumping", false);
         }
     }
 }
