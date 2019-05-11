@@ -10,9 +10,10 @@ public class BaldPirate : MonoBehaviour
     public Player player;
     float cooldownCounter = -1;
 
-    public float angryDistance = 5;
-    public float attackDistance = 1.6f;
-    public float attackCooldown = 1;
+    public float moveSpeed;
+    public float angryDistance;
+    public float attackDistance;
+    public float attackCooldown;
 
     // Start is called before the first frame update
     void Start()
@@ -33,21 +34,14 @@ public class BaldPirate : MonoBehaviour
 
             if (pos.x > targetPos.x)
             {
-                body.velocity = new Vector2(-1, body.velocity.y);
+                body.velocity = new Vector2(-1 * moveSpeed, body.velocity.y);
                 sprite.flipX = true;
             }
             else
             {
-                body.velocity = new Vector2(1, body.velocity.y);
+                body.velocity = new Vector2(1 * moveSpeed, body.velocity.y);
                 sprite.flipX = false;
             }
-
-
-            animator.SetBool("Running", true);
-        }
-        else
-        {
-            animator.SetBool("Running", false);
         }
 
         if (cooldownCounter > 0)
@@ -66,5 +60,6 @@ public class BaldPirate : MonoBehaviour
             cooldownCounter = attackCooldown;
         }
 
+        animator.SetBool("Running", Mathf.Abs(body.velocity.x) > 0.25f);
     }
 }
