@@ -6,11 +6,13 @@ public class BaldPirate : MonoBehaviour
 {
     Rigidbody2D body;
     Animator animator;
-    GameObject target;
     SpriteRenderer sprite;
+    public Player player;
     float cooldownCounter = -1;
 
-    bool isRunning;
+    public float angryDistance = 5;
+    public float attackDistance = 1.6f;
+    public float attackCooldown = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -18,42 +20,51 @@ public class BaldPirate : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-
-        target = GameObject.FindWithTag("Player");
     }
 
     // Update is called once per frame
     void Update()
     {
         var pos = transform.position;
-        var targetPos = target.transform.position;
+        var targetPos = player.transform.position;
+
+        if (Vector3.Distance(pos, targetPos) < angryDistance && !player.playerStats.isDead)
+        {
+
+            if (pos.x > targetPos.x)
+            {
+                body.velocity = new Vector2(-1, body.velocity.y);
+                sprite.flipX = true;
+            }
+            else
+            {
+                body.velocity = new Vector2(1, body.velocity.y);
+                sprite.flipX = false;
+            }
 
 
-
-        if (pos.x > targetPos.x) {
-            body.velocity = new Vector2(-1, body.velocity.y);
-            sprite.flipX = true;
-        } else {
-            body.velocity = new Vector2(1, body.velocity.y);
-            sprite.flipX = false;
+            animator.SetBool("Running", true);
+        }
+        else
+        {
+            animator.SetBool("Running", false);
         }
 
-        if (cooldownCounter > 0) {
+        if (cooldownCounter > 0)
+        {
             cooldownCounter -= Time.deltaTime;
         }
 
-        if (Vector3.Distance(pos, targetPos) < 1.6 && cooldownCounter <= 0) {
+        if (Vector3.Distance(pos, targetPos) < attackDistance && cooldownCounter <= 0 && !player.playerStats.isDead)
+        {
             animator.SetTrigger("Attack");
 
-            var body = target.GetComponent<Rigidbody2D>();
+            var body = player.GetComponent<Rigidbody2D>();
 
-            body.AddForce(new Vector2(0, 1000));
+            player.DamagePlayer(1);
 
-            target.GetComponent<Player>().DamagePlayer(1);
-
-            cooldownCounter = 1;
+            cooldownCounter = attackCooldown;
         }
 
-        animator.SetBool("Running", true);
     }
 }
