@@ -98,9 +98,9 @@ public class Player : MonoBehaviour
         if(playerStats.health <= 0)
         {
             // start death animation
+            body.simulated = false;
             deathScreenCanvas.enabled = true;
             Debug.Log("dead");
-          
         }
     }
 }
