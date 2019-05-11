@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
+    // TODO: Split this code into seperate scripts, eg. player_move, player_shoot, etc
     public int playerSpeed = 10;
     public int playerJumpPower = 1250;
     private float moveX;
@@ -12,6 +13,11 @@ public class Player : MonoBehaviour
     private Rigidbody2D body;
     private SpriteRenderer sprite;
     private Animator animator;
+    public GameObject bomb;
+
+    //Shoot
+    public int shootPower;
+    public int shootAngle;
 
     void Start()
     {
@@ -66,6 +72,12 @@ public class Player : MonoBehaviour
             Jump();
             animator.SetBool("isJumping", true);
         }
+
+        // Shoot
+        if (Input.GetButtonDown("Fire1"))
+        {
+            PlayerShoot();
+        }
     }
 
     void Jump()
@@ -86,5 +98,15 @@ public class Player : MonoBehaviour
             isGrounded = true;
             animator.SetBool("isJumping", false);
         }
+    }
+
+    void PlayerShoot()
+    {
+        // Create a bomb
+        bomb = Instantiate(bomb, new Vector2(sprite.flipX ? body.position.x - 1.5f : body.position.x + 1.4f, body.position.y), transform.rotation);
+        // Add a fraction from the player velocity to the bomb
+        bomb.GetComponent<Rigidbody2D>().velocity = new Vector2(body.velocity.x * 0.6f, body.velocity.y * 0.5f);
+        // Throw the bomb in the direction de player is facing
+        bomb.GetComponent<Rigidbody2D>().AddForce(new Vector2(sprite.flipX ? shootPower * -1 : shootPower, shootAngle));
     }
 }
