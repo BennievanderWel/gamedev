@@ -136,10 +136,10 @@ public class Player : MonoBehaviour
     void PlayerShoot()
     {
         // Create a bomb
-        bomb = Instantiate(bomb, new Vector2(sprite.flipX ? body.position.x - 1.5f : body.position.x + 1.4f, body.position.y), transform.rotation);
+        var newBomb = Instantiate(bomb, new Vector2(sprite.flipX ? body.position.x - 1.5f : body.position.x + 1.4f, body.position.y), transform.rotation);
         // Add a fraction from the player velocity to the bomb
-        bomb.GetComponent<Rigidbody2D>().velocity = new Vector2(body.velocity.x * 0.6f, body.velocity.y * 0.5f);
+        newBomb.GetComponent<Rigidbody2D>().velocity = new Vector2(body.velocity.x * 0.6f, body.velocity.y * 0.5f);
         // Throw the bomb in the direction de player is facing
-        bomb.GetComponent<Rigidbody2D>().AddForce(new Vector2(sprite.flipX ? shootPower * -1 : shootPower, shootAngle));
+        newBomb.GetComponent<Rigidbody2D>().AddForce(new Vector2(sprite.flipX ? shootPower * -1 : shootPower, shootAngle));
     }
 }
