@@ -95,12 +95,20 @@ public class Player : MonoBehaviour
     public void DamagePlayer(int damage)
     {
         playerStats.health -= damage;
-        if(playerStats.health <= 0)
+        if(playerStats.health <= 0 && playerStats.isDead == false)
         {
-            // start death animation
+            // update stats
+            playerStats.isDead = true;
+            playerStats.totalDeaths += 1;
+            
+            // start animation
+            animator.SetTrigger("dead");
+
+            // enable clipping
             body.simulated = false;
+
+            // show death screen
             deathScreenCanvas.enabled = true;
-            Debug.Log("dead");
         }
     }
 }
