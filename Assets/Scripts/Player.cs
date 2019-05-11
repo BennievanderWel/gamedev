@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
+    public int playerhealth = 1;
     public int playerSpeed = 10;
     public int playerJumpPower = 1250;
     private float moveX;
@@ -12,12 +13,14 @@ public class Player : MonoBehaviour
     private Rigidbody2D body;
     private SpriteRenderer sprite;
     private Animator animator;
+    private PlayerStats playerStats;
 
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        playerStats = new PlayerStats();
     }
     void Update()
     {
@@ -85,6 +88,18 @@ public class Player : MonoBehaviour
         {
             isGrounded = true;
             animator.SetBool("isJumping", false);
+        }
+    }
+
+    public void DamagePlayer(int damage)
+    {
+        playerStats.health -= damage;
+        if(playerStats.health <= 0)
+        {
+            // start death animation
+            // load GameOver Screen
+            Debug.Log("dead");
+          
         }
     }
 }

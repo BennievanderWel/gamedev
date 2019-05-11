@@ -48,7 +48,9 @@ public class BaldPirate : MonoBehaviour
             var body = target.GetComponent<Rigidbody2D>();
 
             body.AddForce(new Vector2(0, 1000));
-            
+
+            target.GetComponent<Player>().DamagePlayer(1);
+
             cooldownCounter = 1;
         }
 
