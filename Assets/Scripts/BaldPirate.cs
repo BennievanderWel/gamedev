@@ -7,7 +7,7 @@ public class BaldPirate : MonoBehaviour
     Rigidbody2D body;
     Animator animator;
     SpriteRenderer sprite;
-    public Player player;
+    Player player;
     float cooldownCounter = -1;
 
     public float moveSpeed;
@@ -21,6 +21,8 @@ public class BaldPirate : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -29,8 +31,11 @@ public class BaldPirate : MonoBehaviour
         var pos = transform.position;
         var targetPos = player.transform.position;
 
-        if (Vector3.Distance(pos, targetPos) < angryDistance && !player.playerStats.isDead)
+        var angry = Vector3.Distance(pos, targetPos) < angryDistance && !player.playerStats.isDead;
+
+        if (angry)
         {
+
 
             if (pos.x > targetPos.x)
             {
@@ -43,6 +48,8 @@ public class BaldPirate : MonoBehaviour
                 sprite.flipX = false;
             }
         }
+
+        gameObject.transform.Find("Alert").gameObject.SetActive(angry);
 
         if (cooldownCounter > 0)
         {
