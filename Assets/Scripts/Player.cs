@@ -6,13 +6,17 @@ public class Player : MonoBehaviour
 {
 
     // TODO: Split this code into seperate scripts, eg. player_move, player_shoot, etc
+    public int playerhealth = 1;
     public int playerSpeed = 10;
     public int playerJumpPower = 1250;
+    public Canvas deathScreenCanvas;
     private float moveX;
     private bool isGrounded = true;
     private Rigidbody2D body;
     private SpriteRenderer sprite;
     private Animator animator;
+    private PlayerStats playerStats;
+    
     public GameObject bomb;
 
     //Shoot
@@ -24,6 +28,7 @@ public class Player : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        playerStats = new PlayerStats();
     }
     void Update()
     {
@@ -97,6 +102,26 @@ public class Player : MonoBehaviour
         {
             isGrounded = true;
             animator.SetBool("isJumping", false);
+        }
+    }
+
+    public void DamagePlayer(int damage)
+    {
+        playerStats.health -= damage;
+        if(playerStats.health <= 0 && playerStats.isDead == false)
+        {
+            // update stats
+            playerStats.isDead = true;
+            playerStats.totalDeaths += 1;
+            
+            // start animation
+            animator.SetTrigger("dead");
+
+            // enable clipping
+            body.simulated = false;
+
+            // show death screen
+            deathScreenCanvas.enabled = true;
         }
     }
 
