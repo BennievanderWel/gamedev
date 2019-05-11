@@ -17,16 +17,17 @@ public class Player : MonoBehaviour
     private SpriteRenderer sprite;
     private Animator animator;
     private PlayerStats playerStats;
-    
+
     public GameObject bomb;
 
     //Shoot
     public int shootPower;
     public int shootAngle;
-    
+
     public PlayerButton leftButton;
     public PlayerButton rightButton;
     public Button jumpButton;
+    public Button bombButton;
 
     bool buttonLeft;
 
@@ -38,6 +39,7 @@ public class Player : MonoBehaviour
         playerStats = new PlayerStats();
 
         jumpButton.onClick.AddListener(Jump);
+        bombButton.onClick.AddListener(PlayerShoot);
     }
 
     void Update()
@@ -114,12 +116,12 @@ public class Player : MonoBehaviour
     public void DamagePlayer(int damage)
     {
         playerStats.health -= damage;
-        if(playerStats.health <= 0 && playerStats.isDead == false)
+        if (playerStats.health <= 0 && playerStats.isDead == false)
         {
             // update stats
             playerStats.isDead = true;
             playerStats.totalDeaths += 1;
-            
+
             // start animation
             animator.SetTrigger("dead");
 
