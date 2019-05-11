@@ -28,6 +28,22 @@ public class Player : MonoBehaviour
     {
         moveX = Input.GetAxis("Horizontal");
 
+        // Basic touch movement
+        if (Input.touchCount > 0)
+        {
+            var input = Input.GetTouch(0);
+            var relX = input.position.x / Screen.width;
+
+            if (relX > 0.5)
+            {
+                moveX = 1;
+            }
+            else
+            {
+                moveX = -1;
+            }
+        }
+
         // Face player to the right direction
         if (moveX < 0.0)
         {
