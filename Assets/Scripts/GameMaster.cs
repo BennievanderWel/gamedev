@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class GameMaster : MonoBehaviour
 {
-    public bool isPaused = false;
+    public string preferredNextScene = "Level 1";
 
+    public bool isPaused = false;
     public Canvas pauseCanvas;
 
     void Start()
@@ -26,6 +28,22 @@ public class GameMaster : MonoBehaviour
             }
             
         }
+    }
+
+
+    public void LoadScene()
+    {
+        SceneManager.LoadScene(preferredNextScene, LoadSceneMode.Single);
+    }
+
+    public void StartGame()
+    {
+        LoadScene();
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 
     public void PauseGame()

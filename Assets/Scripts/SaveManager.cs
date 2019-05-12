@@ -37,8 +37,12 @@ public class SaveManager : MonoBehaviour
     // loading
     public void LoadGame() {
         Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        string[] filePaths = GetFilePaths ();
-            Debug.Log("filePaths: " + filePaths[0]);  
+        string[] filePaths = GetFilePaths();
+
+        foreach( var path in filePaths ) {
+            Debug.Log("path: " + path);  
+        }
+
         if(filePaths.Length > 0) {
             player.playerStats = LoadCharacter (filePaths[0]);
             Debug.Log("data: " + player.playerStats);   
@@ -60,6 +64,6 @@ public class SaveManager : MonoBehaviour
     {
         string folderPath = Path.Combine(Application.persistentDataPath, folderName);
 
-        return Directory.GetFiles (folderPath, fileExtension);
+        return Directory.GetFiles(folderPath, fileExtension);
     }
 }
