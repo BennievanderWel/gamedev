@@ -17,7 +17,6 @@ public class Player : MonoBehaviour
     private SpriteRenderer sprite;
     private Animator animator;
 
-    [SerializeField]
     public PlayerStats playerStats;
 
     public GameObject bomb;

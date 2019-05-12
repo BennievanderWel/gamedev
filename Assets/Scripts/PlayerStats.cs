@@ -1,4 +1,5 @@
-﻿public class PlayerStats
+﻿[System.Serializable]
+public class PlayerStats
 {
     public string characterName = "Player";
     public bool isDead = false;

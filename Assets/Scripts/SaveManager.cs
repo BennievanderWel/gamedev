@@ -10,25 +10,18 @@ public class SaveManager : MonoBehaviour
     const string folderName = "SaveData";
     const string fileExtension = ".dat";
 
+    // Saving
     public void SaveGame() {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        //PlayerStats playerStats = player.getPlayerStats();
-        PlayerStats playerStats = player.GetComponent<PlayerStats>();
+        Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        PlayerStats playerStats = player.playerStats;
 
         string folderPath = Path.Combine(Application.persistentDataPath, folderName);
         if (!Directory.Exists (folderPath))
             Directory.CreateDirectory (folderPath);            
 
-        string dataPath = Path.Combine(folderPath, playerStats.characterName + fileExtension);       
+        string dataPath = Path.Combine(folderPath, playerStats.characterName + fileExtension);    
+        Debug.Log("data path: " + dataPath);   
         SaveCharacter (playerStats, dataPath);
-    }
-
-    public static void LoadGame() {
-        string[] filePaths = GetFilePaths ();
-            
-        if(filePaths.Length > 0) {
-            PlayerStats playerStats = LoadCharacter (filePaths[0]);
-        }
     }
 
     static void SaveCharacter (PlayerStats data, string path)
@@ -39,6 +32,18 @@ public class SaveManager : MonoBehaviour
         {
             binaryFormatter.Serialize (fileStream, data);
         }
+    }
+
+    // loading
+    public void LoadGame() {
+        Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        string[] filePaths = GetFilePaths ();
+            Debug.Log("filePaths: " + filePaths[0]);  
+        if(filePaths.Length > 0) {
+            player.playerStats = LoadCharacter (filePaths[0]);
+            Debug.Log("data: " + player.playerStats);   
+        }
+
     }
 
     static PlayerStats LoadCharacter (string path)
